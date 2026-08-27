@@ -1,0 +1,349 @@
+/*
+  Cascade-layer order. The UX4G bundle ships unlayered CSS (including a
+  global reset); unlayered styles would beat every Tailwind layer, wiping
+  out our utilities. Importing it into its own layer between Tailwind's
+  base and components keeps UX4G components fully styled while letting
+  Tailwind utilities and our overrides win.
+*/
+@layer theme, base, ux4g, components, utilities;
+@import "ux4g-web-components/styles.css" layer(ux4g);
+@import "tailwindcss";
+
+/*
+  ClearChallan design tokens — mapped onto the Government of India
+  UX4G Design System 3.0 (npm: ux4g-web-components@1.0.13, the package
+  behind the CDN dist UX4G@3.0.18). The UX4G bundle is imported in
+  layout.tsx BEFORE this file, so everything here layers on top of it.
+
+  Our shell variables (--surface, --ink, --primary, …) are now aliases of
+  UX4G tokens. UX4G themes itself with :root[data-theme="dark"] — the same
+  attribute this app already used — so a single attribute flip themes both
+  UX4G components and our shell. The attribute always carries the RESOLVED
+  theme ("light" or "dark"); the stored user preference (light/dark/system)
+  lives in localStorage and is resolved by the pre-paint script in
+  layout.tsx and by the ThemeToggle.
+*/
+
+:root {
+  /* UX4G typography tokens → the fonts loaded via next/font */
+  --ux4g-font-family-base: var(--font-noto-sans), "Noto Sans", system-ui,
+    sans-serif;
+  --ux4g-font-family-display: var(--font-noto-display), "Noto Sans Display",
+    var(--font-noto-sans), sans-serif;
+
+  /* Surfaces */
+  --surface: var(--ux4g-bg-neutral);
+  --surface-sunken: var(--ux4g-bg-neutral-soft);
+  --surface-elevated: var(--ux4g-bg-neutral-elevated);
+
+  /* Text */
+  --ink: var(--ux4g-text-neutral-primary);
+  --body: var(--ux4g-text-neutral-secondary);
+  --muted: var(--ux4g-text-neutral-tertiary);
+  --muted-strong: var(--ux4g-text-neutral-secondary);
+
+  /* Lines & chrome */
+  --rule: var(--ux4g-border-color-neutral-subtle);
+  --chrome: var(--ux4g-bg-primary-stronger);
+  --chrome-ink: var(--ux4g-color-neutral-0);
+
+  /* Brand — UX4G indigo ramp (#4a2bc2 = primary-600) */
+  --primary: var(--ux4g-bg-primary-strong);
+  --primary-hover: var(--ux4g-bg-primary-strong-hover);
+  --on-primary: var(--ux4g-text-neutral-inverse);
+  --focus: var(--ux4g-bg-primary-strong);
+
+  /* Status (label + tint + 3px left border) via UX4G status tokens */
+  --status-neutral-text: var(--ux4g-text-neutral-secondary);
+  --status-neutral-bg: var(--ux4g-bg-neutral-soft);
+  --status-neutral-border: var(--ux4g-border-color-neutral-strong);
+  --status-caution-text: var(--ux4g-text-status-warning);
+  --status-caution-bg: var(--ux4g-bg-warning-soft);
+  --status-caution-border: var(--ux4g-border-color-warning-strong);
+  --status-alert-text: var(--ux4g-text-status-error);
+  --status-alert-bg: var(--ux4g-bg-error-soft);
+  --status-alert-border: var(--ux4g-border-color-error-strong);
+  --status-success-text: var(--ux4g-text-status-success);
+  --status-success-bg: var(--ux4g-bg-success-soft);
+  --status-success-border: var(--ux4g-border-color-success-strong);
+}
+
+/*
+  AA repair on top of UX4G: in dark mode, UX4G pairs warning text
+  (orange-300) with --ux4g-bg-warning-soft (orange-800) at 3.58:1, below
+  WCAG AA. Substitute UX4G's own orange-900 as the caution tint (≈5.0:1).
+  Every other mapped pair was verified ≥ 4.5:1 in both themes.
+*/
+:root[data-theme="dark"] {
+  --status-caution-bg: var(--ux4g-color-orange-900);
+}
+
+@theme inline {
+  /* Colors → Tailwind utilities (bg-surface, text-ink, border-rule, …) */
+  --color-*: initial;
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-rule: var(--rule);
+  --color-chrome: var(--chrome);
+  --color-chrome-ink: var(--chrome-ink);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-focus: var(--focus);
+  --color-status-neutral-text: var(--status-neutral-text);
+  --color-status-neutral-bg: var(--status-neutral-bg);
+  --color-status-neutral-border: var(--status-neutral-border);
+  --color-status-caution-text: var(--status-caution-text);
+  --color-status-caution-bg: var(--status-caution-bg);
+  --color-status-caution-border: var(--status-caution-border);
+  --color-status-alert-text: var(--status-alert-text);
+  --color-status-alert-bg: var(--status-alert-bg);
+  --color-status-alert-border: var(--status-alert-border);
+  --color-status-success-text: var(--status-success-text);
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-success-border: var(--status-success-border);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Type — UX4G typography (Noto Sans / Noto Sans Display); IBM Plex Mono
+     stays for figures, plates, IDs and amounts. */
+  --font-sans: var(--font-noto-sans), "Noto Sans", system-ui, sans-serif;
+  --font-display: var(--font-noto-display), "Noto Sans Display",
+    var(--font-noto-sans), sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Radius scale → UX4G radius tokens */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-xs: var(--ux4g-radius-1); /* 2px */
+  --radius-sm: var(--ux4g-radius-1); /* 2px */
+  --radius-md: var(--ux4g-radius-2); /* 4px */
+  --radius-lg: var(--ux4g-radius-3); /* 8px */
+  --radius-xl: var(--ux4g-radius-4); /* 12px */
+  --radius-2xl: var(--ux4g-radius-5); /* 16px */
+  --radius-3xl: var(--ux4g-radius-6); /* 24px */
+  --radius-full: var(--ux4g-radius-full);
+
+  /* Elevation → UX4G shadow ladder (l0 = none … l4 = strongest) */
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --shadow-xs: var(--ux4g-shadow-l1);
+  --shadow-sm: var(--ux4g-shadow-l1);
+  --shadow-md: var(--ux4g-shadow-l2);
+  --shadow-lg: var(--ux4g-shadow-l3);
+  --shadow-xl: var(--ux4g-shadow-l4);
+
+  /* Spacing: base-4 scale (4/8/12/16/24/32/48/64), aligned with UX4G's
+     base-4 spacing principle. UX4G's own spacing utilities (ux4g-p-,
+     ux4g-m-, ux4g-gap-) remain available alongside. */
+  --spacing-*: initial;
+  --spacing-0: 0px;
+  --spacing-px: 1px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+}
+
+@layer base {
+  /* The pre-paint script in layout.tsx always sets the resolved theme, so
+     color-scheme follows the attribute. (Without JS the page stays light —
+     UX4G's dark theme only activates via the data-theme attribute.) */
+  html {
+    color-scheme: light;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Figures — plates, IDs, amounts — always line up */
+  code,
+  kbd,
+  samp,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  /* Visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /*
+    Identity guard — ClearChallan is an independent prototype, not a
+    government body. The UX4G bundle ships Government of India identity
+    styling (the gov.in top strip and an embedded Indian-flag SVG). We never
+    render that markup, and these rules make sure it cannot appear even if a
+    UX4G pattern snippet is pasted in verbatim.
+  */
+  .ux4g-topbar,
+  .india-flag {
+    display: none !important;
+  }
+  .india-flag {
+    background-image: none !important;
+  }
+}
+
+/* Tabular figures as a utility (Tailwind's tabular-nums also works) */
+@utility figures {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+  Class-name collision fix: UX4G's accordion markup requires the literal
+  class "collapse", which is also Tailwind's `visibility: collapse` utility —
+  and the utilities layer outranks layer(ux4g), so expanded accordion bodies
+  painted invisible. UX4G hides the closed state via height/overflow only,
+  so restoring visibility is safe. Unlayered on purpose: it must beat the
+  utilities layer.
+*/
+.ux4g-accordion__collapse.collapse {
+  visibility: visible;
+}
+
+/*
+  App-specific showcase pieces UX4G does not provide. Each rule below is a
+  documented gap (Design.md §0.6): values reference UX4G semantic tokens,
+  never raw colours.
+
+  - Gradient: UX4G ships no gradient tokens. Composed from the semantic
+    brand backgrounds, so it theme-flips exactly like a UX4G button.
+  - Float animation: decorative hero motion, wrapped in
+    prefers-reduced-motion: no-preference (and additionally killed by the
+    global reduced-motion rule above).
+  - Map grid: UX4G has no map component; the gated-location tile draws a
+    schematic grid from border tokens instead of using imagery.
+*/
+
+
+@media (prefers-reduced-motion: no-preference) {
+
+
+}
+
+
+
+/*
+  Civic-portal band. UX4G has no gradient tokens (documented gap) — the
+  band is composed from the semantic brand backgrounds, so it theme-flips
+  exactly like a UX4G button: deep indigo in light, lilac in dark, with
+  --ux4g-text-neutral-inverse always readable on it.
+*/
+.cc-band {
+  background: linear-gradient(
+    150deg,
+    var(--ux4g-bg-primary-stronger),
+    var(--ux4g-bg-primary-strong)
+  );
+}
+
+/*
+  Fixed-light payment sheet. The UPI sheet reads as a single-look focused
+  payment surface (like the number plate): light in BOTH themes. Done the
+  contract-approved way — by re-pinning UX4G semantic tokens to their Light
+  values inside the sheet's scope, so every UX4G class and shell alias used
+  within resolves light. No component internals are overridden.
+*/
+.cc-pay-sheet {
+  color-scheme: light;
+  /* Base text: unclassed content must not inherit the page's dark-theme
+     colour; icons and current-colour tokens follow their surroundings. */
+  color: var(--ux4g-color-neutral-900);
+  --ux4g-icon-color: currentColor;
+  --ux4g-text-current: currentColor;
+  --ux4g-bg-neutral: var(--ux4g-color-neutral-50);
+  --ux4g-bg-neutral-soft: var(--ux4g-color-neutral-100);
+  --ux4g-bg-neutral-elevated: var(--ux4g-color-neutral-0);
+  --ux4g-text-neutral-primary: var(--ux4g-color-neutral-900);
+  --ux4g-text-neutral-secondary: var(--ux4g-color-neutral-700);
+  --ux4g-text-neutral-tertiary: var(--ux4g-color-neutral-500);
+  --ux4g-text-neutral-inverse: var(--ux4g-color-neutral-50);
+  --ux4g-border-color-neutral-subtle: var(--ux4g-color-neutral-200);
+  --ux4g-border-color-neutral-default: var(--ux4g-color-neutral-300);
+  --ux4g-bg-primary-strong: var(--ux4g-color-primary-600);
+  --ux4g-bg-primary-strong-hover: var(--ux4g-color-primary-700);
+  --ux4g-bg-primary-soft: var(--ux4g-color-primary-100);
+  --ux4g-text-brand-primary-default: var(--ux4g-color-primary-600);
+  --ux4g-text-link-default-default: var(--ux4g-color-primary-600);
+
+  /* Our shell aliases must be re-pinned here too: custom properties
+     substitute their var() references where they are DEFINED (:root), so
+     the dark values would otherwise be inherited ready-resolved. */
+  --surface: var(--ux4g-color-neutral-50);
+  --surface-sunken: var(--ux4g-color-neutral-100);
+  --surface-elevated: var(--ux4g-color-neutral-0);
+  --ink: var(--ux4g-color-neutral-900);
+  --body: var(--ux4g-color-neutral-700);
+  --muted: var(--ux4g-color-neutral-500);
+  --muted-strong: var(--ux4g-color-neutral-700);
+  --rule: var(--ux4g-color-neutral-200);
+  --primary: var(--ux4g-color-primary-600);
+  --primary-hover: var(--ux4g-color-primary-700);
+  --on-primary: var(--ux4g-color-neutral-50);
+  --focus: var(--ux4g-color-primary-600);
+}
+
+/* Gentle pulse for the waiting state; motion only when the user allows it. */
+@media (prefers-reduced-motion: no-preference) {
+  .cc-pulse {
+    animation: cc-pulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes cc-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+
