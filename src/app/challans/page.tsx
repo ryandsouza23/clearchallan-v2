@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ChallanActions } from "@/components/ChallanActions";
 import { GatedDetails } from "@/components/GatedDetails";
 import {
   type Challan,
@@ -41,7 +42,6 @@ function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
   const status = STATUS_META[challan.status];
   const accordionId = `acc-${challan.id}`;
   const bodyId = `acc-body-${challan.id}`;
-  const gateHref = `/gate?regNo=${encodeURIComponent(regNo)}&challan=${challan.id}`;
 
   return (
     <article className="ux4g-card ux4g-card-outline ux4g-card-vertical">
@@ -132,20 +132,11 @@ function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
         {status.due && (
           <>
             <hr className="ux4g-divider-horizontal my-4" />
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href={`${gateHref}&next=pay`}
-                className="ux4g-btn ux4g-btn-primary ux4g-btn-md"
-              >
-                Pay {challan.amount}
-              </Link>
-              <Link
-                href={`${gateHref}&next=dispute`}
-                className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-md"
-              >
-                Dispute this challan
-              </Link>
-            </div>
+            <ChallanActions
+              regNo={regNo}
+              challanId={challan.id}
+              amount={challan.amount}
+            />
           </>
         )}
       </div>

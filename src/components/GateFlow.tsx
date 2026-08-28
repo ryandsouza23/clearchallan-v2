@@ -1,9 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { VEHICLE_PROOF, normalise } from "@/lib/challans";
-import { markOwnershipProven } from "@/lib/ownership";
+import {
+  isOwnershipProven,
+  markOwnershipProven,
+  subscribeOwnership,
+} from "@/lib/ownership";
 import { Ux4gIcon } from "./Ux4gIcon";
 
 /*
@@ -70,6 +75,17 @@ export function GateFlow({
       : next === "dispute"
         ? "Continue to your dispute"
         : "Back to the challans";
+
+  // Already proven this session? Don't ask again — continue straight on.
+  const proven = useSyncExternalStore(
+    subscribeOwnership,
+    () => isOwnershipProven(regNo),
+    () => false,
+  );
+  const alreadyProven = phase === "choose" && proven;
+  useEffect(() => {
+    if (alreadyProven) router.replace(nextHref);
+  }, [alreadyProven, router, nextHref]);
 
   // Simulated DigiLocker handoff: leaving → returning → success.
   useEffect(() => {
@@ -191,6 +207,28 @@ export function GateFlow({
   }
 
   /* ---------- phases ---------- */
+
+  if (alreadyProven) {
+    return (
+      <div aria-live="polite" className="ux4g-card ux4g-card-outline ux4g-card-vertical">
+        <div className="ux4g-card-body text-center">
+          <Ux4gIcon
+            name="check_circle"
+            className="ux4g-fs-24 text-status-success-text"
+          />
+          <p className="ux4g-body-m-strong mt-2 text-ink">
+            Already verified for{" "}
+            <span className="font-mono">{regNo}</span> — continuing…
+          </p>
+          <p className="mt-3">
+            <Link className="ux4g-text-link-md" href={nextHref}>
+              {nextLabel}
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (phase === "leaving" || phase === "returning") {
     return (
