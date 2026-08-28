@@ -162,8 +162,7 @@ export function PlateInput() {
         id="regNo-hint"
         className="ux4g-label-m-default mx-auto mt-3 max-w-[44ch] text-center text-muted"
       >
-        Usually the state code, district, series and number — like
-        KA&nbsp;25&nbsp;XY&nbsp;4567. Spacing doesn&apos;t matter.
+        DEMO PLATE KA&nbsp;25&nbsp;XY&nbsp;4567
       </p>
 
       <div className="mt-6 text-center">
