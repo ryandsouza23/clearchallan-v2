@@ -117,7 +117,7 @@ export default function Home() {
       <section className="cc-band">
         <div className="mx-auto max-w-5xl px-4 pt-16 pb-16 text-center">
           <Eyebrow inverse>
-            Built to the UX4G standard · not a government service
+            Built to the UX4G standard
           </Eyebrow>
           <h1 className="sr-only">Check a vehicle</h1>
 
