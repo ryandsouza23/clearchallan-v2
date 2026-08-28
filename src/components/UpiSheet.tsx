@@ -183,13 +183,18 @@ export function UpiSheet({
     setState(next);
   }
 
-  // Waiting: tick the approval countdown.
+  // Waiting: tick the approval countdown; the simulated approval arrives
+  // after ~3 seconds and moves the sheet on to processing.
   useEffect(() => {
     if (state !== "waiting") return;
     const t = setInterval(() => {
       setSecondsLeft((s) => (s > 0 ? s - 1 : 0));
     }, 1000);
-    return () => clearInterval(t);
+    const approved = setTimeout(() => setState("processing"), 3000);
+    return () => {
+      clearInterval(t);
+      clearTimeout(approved);
+    };
   }, [state]);
 
   // Processing: hand off to the result page.
