@@ -280,7 +280,7 @@ export function GateFlow({
               <div>
                 <p className="font-mono text-muted">01 · Recommended</p>
                 <h2 className="ux4g-title-s-strong mt-1 text-ink">
-                  Login with Aadhaar — via DigiLocker
+                  DigiLocker
                 </h2>
               </div>
               {route !== "digilocker" && (
@@ -296,12 +296,11 @@ export function GateFlow({
             {route === "digilocker" && (
               <div className="mt-3">
                 <p className="ux4g-body-m-default max-w-[56ch] text-body">
-                  Sign in with your Aadhaar identity the safe way:
-                  you&apos;ll be taken to DigiLocker to authorise sharing the
+                  You&apos;ll be taken to DigiLocker to authorise sharing the
                   registration certificate for{" "}
-                  <span className="font-mono text-ink">{regNo}</span>. Your
-                  Aadhaar number and OTP are entered inside DigiLocker only —
-                  a genuine service never asks for them on a page like this.
+                  <span className="font-mono text-ink">{regNo}</span>. Aadhaar
+                  is verified inside DigiLocker — never on this page. No
+                  number or PIN is typed here.
                 </p>
                 <div className="mt-3 flex flex-wrap items-center gap-3">
                   <button
