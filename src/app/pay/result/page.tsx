@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MarkPaid } from "@/components/PaidState";
 import { ReceiptActions, RecheckStatus } from "@/components/ResultActions";
 import { Ux4gIcon } from "@/components/Ux4gIcon";
 import { display, findChallan } from "@/lib/challans";
@@ -182,6 +183,7 @@ export default async function PayResultPage({
 
       {/* Outcome banner — each of the four reads differently on purpose */}
       <div className="mt-6">
+        {outcome === "success" && <MarkPaid challanId={challanId} />}
         {outcome === "success" && (
           <div className="ux4g-alert ux4g-alert-success" role="status">
             <Ux4gIcon

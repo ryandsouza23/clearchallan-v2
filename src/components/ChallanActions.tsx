@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { isOwnershipProven, subscribeOwnership } from "@/lib/ownership";
+import { isChallanPaid, subscribePaid } from "@/lib/payments";
 
 /*
   Pay / Dispute actions on a challan card. Once ownership is proven for
@@ -23,6 +24,19 @@ export function ChallanActions({
     () => isOwnershipProven(regNo),
     () => false,
   );
+  const paid = useSyncExternalStore(
+    subscribePaid,
+    () => isChallanPaid(challanId),
+    () => false,
+  );
+
+  if (paid) {
+    return (
+      <p className="ux4g-label-l-default text-status-success-text">
+        Paid — nothing due on this challan.
+      </p>
+    );
+  }
 
   const gate = `/gate?regNo=${encodeURIComponent(regNo)}&challan=${encodeURIComponent(challanId)}`;
   const payHref = proven

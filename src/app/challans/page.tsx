@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChallanActions } from "@/components/ChallanActions";
 import { GatedDetails } from "@/components/GatedDetails";
 import { LawAccordion } from "@/components/LawAccordion";
+import { ChallanStatusTag, DueSummary } from "@/components/PaidState";
 import {
   type Challan,
   RECORDS,
@@ -10,7 +11,6 @@ import {
   display,
   normalise,
   resolveVehicle,
-  totalDue,
 } from "@/lib/challans";
 
 export const metadata: Metadata = {
@@ -44,7 +44,11 @@ function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
               <span className="ux4g-tag ux4g-tag-tonal-primary ux4g-tag-s">
                 {challan.section}
               </span>
-              <span className={status.tag}>{status.label}</span>
+              <ChallanStatusTag
+                challanId={challan.id}
+                seededLabel={status.label}
+                seededTag={status.tag}
+              />
             </p>
           </div>
           <div className="text-right">
@@ -156,9 +160,6 @@ export default async function ChallansPage({
     );
   }
 
-  const due = totalDue(challans);
-  const dueCount = challans.filter((c) => STATUS_META[c.status].due).length;
-
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <header>
@@ -174,11 +175,13 @@ export default async function ChallansPage({
             </span>
           )}
         </div>
-        <p className="ux4g-body-l-default mt-4 text-body">
-          {challans.length} challans on this vehicle ·{" "}
-          <span className="font-mono font-medium text-ink">{due}</span> due
-          across {dueCount}.
-        </p>
+        <DueSummary
+          challans={challans.map((c) => ({
+            id: c.id,
+            amount: c.amount,
+            due: STATUS_META[c.status].due,
+          }))}
+        />
         <p className="ux4g-label-l-default mt-2 text-muted">
           Every challan on this vehicle, gathered into one place.
         </p>

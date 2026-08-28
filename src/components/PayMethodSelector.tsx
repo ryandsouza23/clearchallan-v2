@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { isChallanPaid, subscribePaid } from "@/lib/payments";
 import { Ux4gIcon } from "./Ux4gIcon";
 
 /*
@@ -64,6 +66,35 @@ export function PayMethodSelector({
   const router = useRouter();
   const [method, setMethod] = useState<MethodId>("upi");
   const [rail, setRail] = useState<Rail>("portal");
+  const paid = useSyncExternalStore(
+    subscribePaid,
+    () => isChallanPaid(challanId),
+    () => false,
+  );
+
+  if (paid) {
+    return (
+      <div className="ux4g-alert ux4g-alert-success" role="status">
+        <Ux4gIcon
+          name="check_circle"
+          className="ux4g-alert-icon text-status-success-text"
+        />
+        <div className="ux4g-alert-content">
+          <p className="ux4g-alert-title">This challan is already paid</p>
+          <p className="ux4g-alert-message">
+            Paying twice is the exact mistake this tool warns against —
+            there is nothing due here.{" "}
+            <Link
+              className="ux4g-text-link-md"
+              href={`/challans?regNo=${encodeURIComponent(regNo)}`}
+            >
+              Back to the challans
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const query = `?regNo=${encodeURIComponent(regNo)}&challan=${encodeURIComponent(challanId)}`;
   const href =
