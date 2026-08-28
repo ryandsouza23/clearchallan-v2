@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChallanActions } from "@/components/ChallanActions";
 import { GatedDetails } from "@/components/GatedDetails";
+import { LawAccordion } from "@/components/LawAccordion";
 import {
   type Challan,
   RECORDS,
@@ -14,16 +15,6 @@ import {
 export const metadata: Metadata = {
   title: "Challans",
 };
-
-// Custom UX4G runtime attributes (ux4g-toggle etc.) are spread so TSX
-// accepts them; the runtime drives the accordion via event delegation.
-function collapseAttrs(targetId: string, parentId: string) {
-  return {
-    "ux4g-toggle": "collapse",
-    "ux4g-target": `#${targetId}`,
-    "ux4g-parent": `#${parentId}`,
-  } as Record<string, string>;
-}
 
 function StaticPlate({ regNo }: { regNo: string }) {
   return (
@@ -40,8 +31,6 @@ function StaticPlate({ regNo }: { regNo: string }) {
 
 function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
   const status = STATUS_META[challan.status];
-  const accordionId = `acc-${challan.id}`;
-  const bodyId = `acc-body-${challan.id}`;
 
   return (
     <article className="ux4g-card ux4g-card-outline ux4g-card-vertical">
@@ -81,42 +70,14 @@ function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
         </dl>
 
         {/* Plain-language law, expandable */}
-        <div
-          className="ux4g-accordion ux4g-accordion-arrow-right ux4g-accordion-bordered mt-4"
-          id={accordionId}
-        >
-          <div className="ux4g-accordion__item">
-            <h3 className="ux4g-accordion__header">
-              <button
-                type="button"
-                className="ux4g-accordion__button collapsed"
-                aria-expanded="false"
-                aria-controls={bodyId}
-                {...collapseAttrs(bodyId, accordionId)}
-              >
-                <span className="ux4g-accordion__button-content">
-                  <span className="ux4g-accordion__title">
-                    What {challan.section.replace("MV Act ", "")} means
-                  </span>
-                </span>
-              </button>
-            </h3>
-            <div
-              className="ux4g-accordion__collapse collapse"
-              id={bodyId}
-              {...{ "ux4g-parent": `#${accordionId}` }}
-            >
-              <div className="ux4g-accordion__body">
-                <p className="ux4g-body-m-default text-body">
-                  {challan.sectionMeaning}
-                </p>
-                <p className="ux4g-label-m-default mt-2 text-muted">
-                  Plain-language summary, illustrative — not legal advice.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LawAccordion title={`What ${challan.section.replace("MV Act ", "")} means`}>
+          <p className="ux4g-body-m-default text-body">
+            {challan.sectionMeaning}
+          </p>
+          <p className="ux4g-label-m-default mt-2 text-muted">
+            Plain-language summary, illustrative — not legal advice.
+          </p>
+        </LawAccordion>
 
         {/* Gated: camera photo + exact location. Locked until ownership is
             proven via /gate; never rendered while locked. */}

@@ -222,6 +222,16 @@
   }
 }
 
+/*
+  Scroll fix: UX4G ships `:where(body){overflow-x:clip}`, and body overflow
+  propagates to the viewport — a clip-axis viewport wedges wheel scrolling
+  in Chromium. Our layouts are horizontally overflow-safe at every width,
+  so restore the default. Unlayered on purpose: it must beat layer(ux4g).
+*/
+body {
+  overflow-x: visible;
+}
+
 /* Tabular figures as a utility (Tailwind's tabular-nums also works) */
 @utility figures {
   font-variant-numeric: tabular-nums;

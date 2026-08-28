@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Noto_Sans, Noto_Sans_Display } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { TopBar } from "@/components/TopBar";
-import { Ux4gRuntime } from "@/components/Ux4gRuntime";
 // UX4G Design System 3.0 (ux4g-web-components@1.0.13, the npm package
 // behind CDN dist UX4G@3.0.18) is imported inside globals.css into a
 // dedicated cascade layer so Tailwind utilities and our overrides win.
@@ -65,7 +64,6 @@ export default function RootLayout({
         className={`${notoSans.variable} ${notoDisplay.variable} ${plexMono.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
         <script dangerouslySetInnerHTML={{ __html: initScript }} />
-        <Ux4gRuntime />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-primary focus:px-4 focus:py-3 focus:text-on-primary"
