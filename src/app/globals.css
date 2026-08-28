@@ -69,14 +69,11 @@
 }
 
 /*
-  AA repair on top of UX4G: in dark mode, UX4G pairs warning text
-  (orange-300) with --ux4g-bg-warning-soft (orange-800) at 3.58:1, below
-  WCAG AA. Substitute UX4G's own orange-900 as the caution tint (≈5.0:1).
-  Every other mapped pair was verified ≥ 4.5:1 in both themes.
+  Light-only build: data-theme="light" is fixed on <html> in layout.tsx,
+  so UX4G's dark rules (keyed to :root[data-theme="dark"]) never apply.
+  (Historical note: dark mode needed an AA repair for UX4G's warning tint;
+  removed along with theming.)
 */
-:root[data-theme="dark"] {
-  --status-caution-bg: var(--ux4g-color-orange-900);
-}
 
 @theme inline {
   /* Colors → Tailwind utilities (bg-surface, text-ink, border-rule, …) */
@@ -157,14 +154,9 @@
 }
 
 @layer base {
-  /* The pre-paint script in layout.tsx always sets the resolved theme, so
-     color-scheme follows the attribute. (Without JS the page stays light —
-     UX4G's dark theme only activates via the data-theme attribute.) */
+  /* Light-only site. */
   html {
     color-scheme: light;
-  }
-  [data-theme="dark"] {
-    color-scheme: dark;
   }
 
   body {

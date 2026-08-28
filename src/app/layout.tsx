@@ -40,23 +40,11 @@ export const metadata: Metadata = {
     "Independent prototype for checking vehicle challans. All records are invented; not a government service.",
 };
 
-// Applies the stored theme before first paint so there is no flash.
-// UX4G's dark theme keys off :root[data-theme="dark"], with no
-// prefers-color-scheme fallback of its own — so the attribute always
-// carries the RESOLVED theme. "system" (or no stored value) resolves via
-// matchMedia here and is kept in sync by the ThemeToggle afterwards.
-const themeInitScript = `
+// Light-only: the site does not theme. data-theme="light" is fixed on
+// <html>, so UX4G's dark rules (keyed to [data-theme="dark"]) never apply.
+// This pre-paint script only restores the persisted text-size preference.
+const initScript = `
 (function () {
-  var theme = "light";
-  try {
-    var stored = localStorage.getItem("clearchallan-theme");
-    if (stored === "light" || stored === "dark") {
-      theme = stored;
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      theme = "dark";
-    }
-  } catch (e) {}
-  document.documentElement.setAttribute("data-theme", theme);
   try {
     var scale = parseInt(localStorage.getItem("clearchallan-font-scale"), 10);
     if (scale && scale !== 100 && scale >= 80 && scale <= 130) {
@@ -72,11 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <body
         className={`${notoSans.variable} ${notoDisplay.variable} ${plexMono.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: initScript }} />
         <Ux4gRuntime />
         <a
           href="#main-content"
