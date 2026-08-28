@@ -82,7 +82,7 @@ function ChallanCard({ challan, regNo }: { challan: Challan; regNo: string }) {
 
         {/* Plain-language law, expandable */}
         <div
-          className="ux4g-accordion ux4g-accordion-arrow-right mt-4"
+          className="ux4g-accordion ux4g-accordion-arrow-right ux4g-accordion-bordered mt-4"
           id={accordionId}
         >
           <div className="ux4g-accordion__item">
