@@ -1,49 +1,33 @@
 /*
-  Session-scoped ownership flag. No accounts, no server: proof of ownership
-  lives in sessionStorage for this tab only, and is read via
-  useSyncExternalStore-compatible helpers. Client-side only.
+  Ownership flag — in-memory only, on purpose: proof of ownership lasts
+  until the page is refreshed or closed. A reload forgets it, so every
+  fresh page load walks through the ownership gate again. No accounts,
+  no storage, nothing persisted.
 */
 
 import { normalise } from "./challans";
 
-const KEY = "cc-ownership-proven";
+const proven = new Set<string>();
 const EVENT = "cc-ownership-change";
 
-function readSet(): Set<string> {
-  try {
-    const raw = window.sessionStorage.getItem(KEY);
-    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
-  } catch {
-    return new Set();
-  }
-}
-
 export function markOwnershipProven(regNo: string) {
-  try {
-    const set = readSet();
-    set.add(normalise(regNo));
-    window.sessionStorage.setItem(KEY, JSON.stringify([...set]));
-  } catch {
-    // Storage unavailable; the flag simply won't persist.
-  }
+  proven.add(normalise(regNo));
   window.dispatchEvent(new Event(EVENT));
 }
 
 export function isOwnershipProven(regNo: string) {
-  return readSet().has(normalise(regNo));
+  return proven.has(normalise(regNo));
 }
 
-/* True when ownership of any vehicle is proven this session — the closest
-   thing this account-less prototype has to "logged in". */
+/* True when ownership of any vehicle is proven since the last page load —
+   the closest thing this account-less prototype has to "logged in". */
 export function hasAnyOwnership() {
-  return readSet().size > 0;
+  return proven.size > 0;
 }
 
 export function subscribeOwnership(callback: () => void) {
   window.addEventListener(EVENT, callback);
-  window.addEventListener("storage", callback);
   return () => {
     window.removeEventListener(EVENT, callback);
-    window.removeEventListener("storage", callback);
   };
 }

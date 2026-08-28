@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CardPaymentForm } from "@/components/CardPaymentForm";
+import { OwnershipGuard } from "@/components/OwnershipGuard";
 import { display, findChallan } from "@/lib/challans";
 
 export const metadata: Metadata = {
@@ -63,11 +64,13 @@ export default async function PayCardPage({
       </section>
 
       <div className="mt-6">
+        <OwnershipGuard regNo={shown} challanId={challan.id} next="pay">
         <CardPaymentForm
           regNo={shown}
           challanId={challan.id}
           amount={challan.amount}
         />
+        </OwnershipGuard>
       </div>
     </div>
   );

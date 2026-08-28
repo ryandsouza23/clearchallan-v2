@@ -47,7 +47,7 @@ export function GatedDetails({
                   Unlocked — camera photo and exact location
                 </p>
                 <p className="ux4g-label-m-default mt-1 text-muted">
-                  Ownership proven for this session.
+                  Ownership proven — resets when you refresh.
                 </p>
               </div>
             </div>

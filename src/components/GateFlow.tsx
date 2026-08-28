@@ -273,7 +273,7 @@ export function GateFlow({
           <p className="ux4g-body-m-default mt-2 text-body">
             Ownership of{" "}
             <span className="font-mono text-ink">{regNo}</span> proven via{" "}
-            {provenVia}. This holds for the rest of your session.
+            {provenVia}. This holds until you refresh or leave the page.
           </p>
           <p className="mt-2">
             <span className="ux4g-tag ux4g-tag-tonal-success">

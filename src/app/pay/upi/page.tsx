@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OwnershipGuard } from "@/components/OwnershipGuard";
 import { UpiSheet } from "@/components/UpiSheet";
 import { display, findChallan } from "@/lib/challans";
 
@@ -42,11 +43,13 @@ export default async function PayUpiPage({
         this page moves money.
       </p>
       <div className="mt-6">
+        <OwnershipGuard regNo={display(regNo)} challanId={challan.id} next="pay">
         <UpiSheet
           regNo={display(regNo)}
           challanId={challan.id}
           amount={challan.amount}
         />
+        </OwnershipGuard>
       </div>
     </div>
   );

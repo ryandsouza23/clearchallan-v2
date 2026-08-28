@@ -33,8 +33,8 @@ export default async function GatePage({
             </h2>
             <p className="ux4g-body-l-default mt-4 max-w-[38ch] text-(--ux4g-text-neutral-inverse)">
               Photos, exact locations, payment and disputes unlock once you
-              prove the vehicle is yours — and the proof holds for your whole
-              session.
+              prove the vehicle is yours — and the proof holds until you
+              refresh or leave.
             </p>
           </div>
           <div className="ux4g-sidebar-bottom flex gap-6">
@@ -51,7 +51,7 @@ export default async function GatePage({
                 Accounts created
               </span>
               <span className="ux4g-label-l-default text-(--ux4g-text-neutral-inverse)">
-                None — session only
+                None — proof resets on refresh
               </span>
             </div>
           </div>

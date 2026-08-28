@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OwnershipGuard } from "@/components/OwnershipGuard";
 import { PayMethodSelector } from "@/components/PayMethodSelector";
 import { display, findChallan } from "@/lib/challans";
 
@@ -40,6 +41,8 @@ export default async function PayPage({
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="ux4g-heading-l-strong text-ink">Choose how to pay</h1>
+
+      <OwnershipGuard regNo={shown} challanId={challan.id} next="pay">
 
       {/* Fee Summary — who you're paying, for what, and how much */}
       <section
@@ -100,6 +103,7 @@ export default async function PayPage({
           amount={challan.amount}
         />
       </div>
+      </OwnershipGuard>
     </div>
   );
 }
