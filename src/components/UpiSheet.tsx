@@ -149,13 +149,6 @@ function FakeQr({ seed }: { seed: string }) {
   );
 }
 
-const STATES: { id: SheetState; label: string }[] = [
-  { id: "confirm", label: "Confirm" },
-  { id: "qr", label: "QR" },
-  { id: "waiting", label: "Waiting" },
-  { id: "processing", label: "Processing" },
-];
-
 export function UpiSheet({
   regNo,
   challanId,
@@ -208,30 +201,6 @@ export function UpiSheet({
 
   return (
     <div>
-      {/* Preview-only control, clearly outside the sheet */}
-      <div
-        role="group"
-        aria-label="Preview sheet state"
-        className="mb-4 flex flex-wrap items-center gap-2"
-      >
-        <span className="ux4g-label-m-default text-muted">Preview state</span>
-        {STATES.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            aria-pressed={state === s.id}
-            onClick={() => goTo(s.id)}
-            className={`border px-2 py-1 text-sm ${
-              state === s.id
-                ? "border-primary bg-primary text-on-primary"
-                : "border-rule bg-surface text-body hover:text-ink"
-            }`}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-
       {/* The sheet — fixed light, both themes */}
       <div className="cc-pay-sheet ux4g-card ux4g-card-solid ux4g-card-vertical ux4g-shadow-l3 mx-auto max-w-md">
         <div className="ux4g-card-body">
