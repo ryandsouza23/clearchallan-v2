@@ -9,9 +9,6 @@ import { Ux4gIcon } from "@/components/Ux4gIcon";
   UX4G tokens — no photography, no illustration, no identity assets.
 */
 
-const TAGLINE =
-  "See every traffic challan on a vehicle, gathered from the systems that normally scatter them.";
-
 const HIGHLIGHTS = [
   {
     icon: "search",
@@ -122,12 +119,7 @@ export default function Home() {
           <Eyebrow inverse>
             Built to the UX4G standard · not a government service
           </Eyebrow>
-          <h1 className="ux4g-display-xs-strong mx-auto mt-4 max-w-[22ch] text-(--ux4g-text-neutral-inverse)">
-            Every challan on your vehicle, made legible
-          </h1>
-          <p className="ux4g-body-l-default mx-auto mt-3 max-w-[48ch] text-(--ux4g-text-neutral-inverse)">
-            {TAGLINE}
-          </p>
+          <h1 className="sr-only">Check a vehicle</h1>
 
           <div className="ux4g-card ux4g-card-solid ux4g-card-vertical ux4g-shadow-l3 mx-auto mt-8 max-w-xl text-left">
             <div className="ux4g-card-body">
