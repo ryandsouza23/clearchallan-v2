@@ -183,3 +183,19 @@ export const DISPUTES: Record<
     ],
   },
 };
+
+/*
+  Lookup resolver: a query can be a registration number, or the vehicle's
+  chassis / engine numbers (last five, alone or together in either order) —
+  those are linked to the vehicle and resolve to its records.
+*/
+export function resolveVehicle(query: string): string | null {
+  const q = normalise(query);
+  if (RECORDS[q]) return q;
+  for (const [reg, proof] of Object.entries(VEHICLE_PROOF)) {
+    const c = proof.chassisLast5;
+    const e = proof.engineLast5;
+    if (q === c || q === e || q === c + e || q === e + c) return reg;
+  }
+  return null;
+}

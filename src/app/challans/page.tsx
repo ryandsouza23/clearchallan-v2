@@ -9,6 +9,7 @@ import {
   STATUS_META,
   display,
   normalise,
+  resolveVehicle,
   totalDue,
 } from "@/lib/challans";
 
@@ -127,8 +128,10 @@ export default async function ChallansPage({
     );
   }
 
-  const shown = display(regNo);
-  const challans = RECORDS[normalise(regNo)];
+  const resolved = resolveVehicle(regNo);
+  const viaChassisEngine = resolved !== null && normalise(regNo) !== resolved;
+  const shown = display(resolved ?? regNo);
+  const challans = resolved ? RECORDS[resolved] : undefined;
 
   if (!challans) {
     return (
@@ -165,6 +168,11 @@ export default async function ChallansPage({
           <span className="ux4g-tag ux4g-tag-outline-neutral ux4g-tag-s">
             Sample data
           </span>
+          {viaChassisEngine && (
+            <span className="ux4g-tag ux4g-tag-tonal-primary ux4g-tag-s">
+              Matched by chassis / engine number
+            </span>
+          )}
         </div>
         <p className="ux4g-body-l-default mt-4 text-body">
           {challans.length} challans on this vehicle ·{" "}
